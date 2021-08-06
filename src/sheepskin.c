@@ -5,6 +5,7 @@
 
 #include "module.h"
 
+/* NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables) */
 int	sheep_item_timeout;
 
 int	zbx_module_api_version(void)
