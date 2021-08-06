@@ -10,5 +10,9 @@ env:
 - BRANCH=release/4.0
 before_script:
 - git clone https://git.zabbix.com/scm/zbx/zabbix.git --depth 1 --single-branch --branch $BRANCH
+- cd zabbix
+- ./bootstrap.sh
+- ./configure
+- cd -
 script:
 - ZABBIX_SOURCE=zabbix CFLAGS='-Wall -Wextra -Wpedantic -g -O2' make
