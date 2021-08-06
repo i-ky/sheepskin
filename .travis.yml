@@ -1,0 +1,14 @@
+language: c
+compiler:
+- clang
+- gcc
+dist: xenial
+env:
+- BRANCH=master
+- BRANCH=release/5.4
+- BRANCH=release/5.0
+- BRANCH=release/4.0
+before_script:
+- git clone https://git.zabbix.com/scm/zbx/zabbix.git --depth 1 --single-branch --branch $BRANCH
+script:
+- ZABBIX_SOURCE=zabbix CFLAGS='-Wall -Wextra -Wpedantic -g -O2' make

@@ -1,0 +1,7 @@
+tasks:
+- init: >-
+    export ZABBIX_SOURCE="/workspace/zabbix" &&
+    git clone https://git.zabbix.com/scm/zbx/zabbix.git --depth 1 "$ZABBIX_SOURCE" &&
+    bear make
+image:
+  file: .gitpod.Dockerfile
