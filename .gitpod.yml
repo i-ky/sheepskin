@@ -9,3 +9,6 @@ tasks:
     bear make
 image:
   file: .gitpod.Dockerfile
+vscode:
+  extensions:
+  - llvm-vs-code-extensions.vscode-clangd
