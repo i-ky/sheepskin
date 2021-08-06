@@ -19,7 +19,7 @@ void	zbx_module_item_timeout(int timeout)
 
 int	zbx_module_init(void)
 {
-	int		ret = ZBX_MODULE_OK;
+	int	ret = ZBX_MODULE_OK;
 
 	printf("Initializing \"sheepskin\" module...\n");
 
