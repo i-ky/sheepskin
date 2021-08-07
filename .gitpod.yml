@@ -3,7 +3,9 @@ tasks:
     git clone https://git.zabbix.com/scm/zbx/zabbix.git --depth 1 "$ZABBIX_SOURCE" &&
     cd "$ZABBIX_SOURCE" &&
     ./bootstrap.sh &&
-    ./configure &&
+    ./configure --enable-agent --enable-agent2 --prefix=/workspace &&
+    make install &&
+    echo 'LoadModule=/workspace/sheepskin/sheepskin.so' > /workspace/etc/zabbix_agentd.conf &&
     cd - &&
     bear make
 image:
