@@ -56,3 +56,6 @@ compile_commands.json
 
 # clangd index
 .cache/clangd/index/
+
+# Python cache
+tests/__pycache__/
