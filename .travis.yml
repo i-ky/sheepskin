@@ -10,9 +10,8 @@ env:
 - BRANCH=release/4.0
 services:
 - docker
-sudo: true
 before_install:
-- sudo apt install python3-pytest
+- pip3 install pytest
 before_script:
 - git clone https://git.zabbix.com/scm/zbx/zabbix.git --depth 1 --single-branch --branch $BRANCH
 - cd zabbix
