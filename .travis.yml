@@ -11,7 +11,7 @@ env:
 services:
 - docker
 before_install:
-- pip3 install pytest
+- pip install pytest
 before_script:
 - git clone https://git.zabbix.com/scm/zbx/zabbix.git --depth 1 --single-branch --branch $BRANCH
 - cd zabbix
@@ -22,6 +22,6 @@ script:
 - ZABBIX_SOURCE=zabbix CFLAGS='-Wall -Wextra -Wpedantic -g -O2' make
 - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_LOGIN" --password-stdin
 - docker-compose --file tests/docker-compose.yml up --detach
-- pytest-3
+- pytest
 after_failure:
 - docker-compose --file tests/docker-compose.yml logs agent
