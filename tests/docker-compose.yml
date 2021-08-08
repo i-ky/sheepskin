@@ -8,10 +8,7 @@ services:
       ZBX_LOADMODULE: sheepskin.so
       ZBX_PASSIVESERVERS: 127.0.0.1,::1
     volumes:
-    - type: bind
-      source: ../sheepskin.so
-      target: /var/lib/zabbix/modules/sheepskin.so
-      read_only: true
+    - ../sheepskin.so:/var/lib/zabbix/modules/sheepskin.so:ro
   agent2:
     image: zabbix/zabbix-agent2:alpine-trunk
     environment:
