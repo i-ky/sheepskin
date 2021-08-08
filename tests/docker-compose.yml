@@ -1,15 +1,12 @@
-version: "3.8"
-
-x-env: &env
-  ZBX_PASSIVESERVERS: 127.0.0.1,::1
+version: "3"
 
 services:
   agent:
     image: zabbix/zabbix-agent
     environment:
-      <<: *env
       ZBX_DEBUGLEVEL: 4
       ZBX_LOADMODULE: sheepskin.so
+      ZBX_PASSIVESERVERS: 127.0.0.1,::1
     volumes:
     - type: bind
       source: ../sheepskin.so
@@ -17,4 +14,5 @@ services:
       read_only: true
   agent2:
     image: zabbix/zabbix-agent2:alpine-trunk
-    environment: *env
+    environment:
+      ZBX_PASSIVESERVERS: 127.0.0.1,::1
