@@ -59,3 +59,6 @@ compile_commands.json
 
 # Python cache
 tests/__pycache__/
+
+# Pytest
+.pytest_cache/
