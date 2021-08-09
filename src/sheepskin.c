@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <curl/curl.h>
 
@@ -46,7 +47,7 @@ int	zbx_module_uninit(void)
 static int	sheep_web_certificate_get(AGENT_REQUEST *request, AGENT_RESULT *result)
 {
 	/* TODO */
-	SET_MSG_RESULT(result, NULL);
+	SET_MSG_RESULT(result, strdup("Not implemented yet..."));
 	return SYSINFO_RET_FAIL;
 }
 
