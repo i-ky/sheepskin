@@ -1,4 +1,8 @@
 Checks: |-
   *,
+  -cppcoreguidelines-init-variables,
+  -google-readability-todo,
+  -hicpp-signed-bitwise,
   -llvmlibc-restrict-system-libc-headers,
+  -readability-isolate-declaration,
   -*-braces-around-statements
