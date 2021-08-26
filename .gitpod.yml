@@ -5,7 +5,7 @@ tasks:
     ./bootstrap.sh &&
     ./configure --enable-agent --enable-agent2 --prefix=/workspace &&
     make install &&
-    echo 'LoadModule=/workspace/sheepskin/sheepskin.so' > /workspace/etc/zabbix_agentd.conf &&
+    echo 'LoadModule=/workspace/sheepskin/sheepskin.so' >> /workspace/etc/zabbix_agentd.conf &&
     cd - &&
     bear make
 image:
