@@ -2,6 +2,8 @@ language: c
 compiler:
 - clang
 - gcc
+go:
+- "1.13"
 dist: focal
 env:
 - BRANCH=master
