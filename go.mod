@@ -1,5 +1,5 @@
 module zabbix.com
 
-go 1.16
+go 1.13
 
-require golang.org/x/sys v0.0.0-20210823070655-63515b42dcdf
+require golang.org/x/sys v0.0.0-20210104204734-6f8348627aad
