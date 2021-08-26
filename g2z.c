@@ -1,4 +1,4 @@
-#include "module.h"
+#include "g2z.h"
 
 int	sheep_get_rparams_num(const AGENT_REQUEST *request)
 {
