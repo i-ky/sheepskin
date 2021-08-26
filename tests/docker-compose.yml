@@ -7,8 +7,10 @@ services:
       ZBX_DEBUGLEVEL: 4
       ZBX_LOADMODULE: sheepskin.so
       ZBX_PASSIVESERVERS: 127.0.0.1,::1
+      LD_LIBRARY_PATH: /var/lib/zabbix/modules/
     volumes:
     - ../sheepskin.so:/var/lib/zabbix/modules/sheepskin.so:ro
+    - ../sheepskin-cgo.so:/var/lib/zabbix/modules/sheepskin-cgo.so:ro
   agent2:
     image: zabbix/zabbix-agent2:alpine-trunk
     environment:

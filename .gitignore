@@ -62,3 +62,6 @@ tests/__pycache__/
 
 # Pytest
 .pytest_cache/
+
+# CGO
+sheepskin-cgo.h
