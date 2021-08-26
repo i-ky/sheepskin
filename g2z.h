@@ -1,3 +1,6 @@
+#include <stdint.h>
+#include <stdlib.h>
+
 #include "module.h"
 
 int		sheep_get_rparams_num(const AGENT_REQUEST *request);
