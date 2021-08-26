@@ -2,7 +2,7 @@ version: "3"
 
 services:
   agent:
-    image: zabbix/zabbix-agent
+    image: zabbix/zabbix-agent:ubuntu-trunk
     environment:
       ZBX_DEBUGLEVEL: 4
       ZBX_LOADMODULE: sheepskin.so
