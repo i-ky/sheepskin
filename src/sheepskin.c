@@ -1,8 +1,9 @@
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include <curl/curl.h>
+#include <dlfcn.h>
 
 #include "module.h"
 
@@ -46,9 +47,34 @@ int	zbx_module_uninit(void)
 
 static int	sheep_web_certificate_get(AGENT_REQUEST *request, AGENT_RESULT *result)
 {
-	/* TODO */
-	SET_MSG_RESULT(result, strdup("Not implemented yet..."));
-	return SYSINFO_RET_FAIL;
+	static void	*lib = NULL;
+	static void	(*set_timeout)(int) = NULL;
+	static int	(*check_item)(AGENT_REQUEST *, AGENT_RESULT *) = NULL;
+
+	if (NULL == lib && NULL == (lib = dlopen("sheepskin-cgo.so", RTLD_NOW | RTLD_LOCAL | RTLD_DEEPBIND)))
+	{
+		SET_MSG_RESULT(result, strdup(dlerror()));
+		return SYSINFO_RET_FAIL;
+	}
+
+	if (NULL == set_timeout)
+	{
+		if (NULL == (set_timeout = dlsym(lib, "sheep_set_timeout")))
+		{
+			SET_MSG_RESULT(result, strdup(dlerror()));
+			return SYSINFO_RET_FAIL;
+		}
+
+		set_timeout(sheep_item_timeout);
+	}
+
+	if (NULL == check_item && NULL == (check_item = dlsym(lib, "sheep_check_item")))
+	{
+		SET_MSG_RESULT(result, strdup(dlerror()));
+		return SYSINFO_RET_FAIL;
+	}
+
+	return check_item(request, result);
 }
 
 ZBX_METRIC	*zbx_module_item_list(void)

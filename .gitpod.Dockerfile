@@ -7,10 +7,10 @@ RUN sudo apt-get -q update && \
         autoconf \
         automake \
         bear \
-        libcurl4-openssl-dev \
         python3-pytest \
     && \
     sudo rm -rf /var/lib/apt/lists/*
 
 ENV ZABBIX_SOURCE=/workspace/zabbix
 ENV PATH=/workspace/sbin:/workspace/bin:$PATH
+ENV LD_LIBRARY_PATH=/workspace/sheepskin
