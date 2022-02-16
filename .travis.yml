@@ -7,9 +7,8 @@ go:
 dist: focal
 env:
 - BRANCH=master
-- BRANCH=release/5.4
+- BRANCH=release/6.0
 - BRANCH=release/5.0
-- BRANCH=release/4.0
 services:
 - docker
 before_install:
