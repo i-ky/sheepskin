@@ -91,5 +91,5 @@ if the module is loaded by server or proxy;
 if the module is loaded by agent.
 
 Please refer to
-[official documentation of `web.certificate.get`](https://www.zabbix.com/documentation/current/manual/config/items/itemtypes/zabbix_agent/zabbix_agent2?s%5B%5D=web.certificate.get)
+[official documentation of `web.certificate.get`](https://www.zabbix.com/documentation/current/en/manual/config/items/itemtypes/zabbix_agent/zabbix_agent2#web-certificate)
 for further details.
