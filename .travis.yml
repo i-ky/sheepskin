@@ -3,7 +3,7 @@ compiler:
 - clang
 - gcc
 go:
-- "1.13"
+- "1.16"
 dist: focal
 env:
 - BRANCH=master
