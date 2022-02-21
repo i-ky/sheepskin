@@ -1,6 +1,6 @@
 /*
 ** Zabbix
-** Copyright (C) 2001-2021 Zabbix SIA
+** Copyright (C) 2001-2022 Zabbix SIA
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ package conf
 
 import (
 	"bytes"
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"os"
@@ -46,6 +47,18 @@ type Meta struct {
 type Suffix struct {
 	suffix string
 	factor int
+}
+
+var currentConfigPath string
+
+// setCurrentConfigPath sets a path of the current config file.
+func setCurrentConfigPath(path string) {
+	currentConfigPath = path
+}
+
+// GetCurrentConfigPath returns a path of the current config file.
+func GetCurrentConfigPath() string {
+	return currentConfigPath
 }
 
 func validateParameterName(key []byte) (err error) {
@@ -393,6 +406,22 @@ func hasMeta(path string) bool {
 }
 
 func loadInclude(root *Node, path string) (err error) {
+	path = filepath.Clean(path)
+	if err := checkGlobPattern(path); err != nil {
+		return newIncludeError(root, &path, err.Error())
+	}
+
+	absPath, err := filepath.Abs(path)
+	if err != nil {
+		return newIncludeError(root, &path, err.Error())
+	}
+
+	// If a path is relative, pad it with a directory of the current config file
+	if path != absPath {
+		confDir := filepath.Dir(GetCurrentConfigPath())
+		path = filepath.Join(confDir, path)
+	}
+
 	if hasMeta(filepath.Dir(path)) {
 		return newIncludeError(root, &path, "glob pattern is supported only in file names")
 	}
@@ -432,9 +461,6 @@ func loadInclude(root *Node, path string) (err error) {
 		if fi.IsDir() {
 			continue
 		}
-		if !filepath.IsAbs(path) {
-			return newIncludeError(root, &path, "relative paths are not supported")
-		}
 
 		var file std.File
 		if file, err = stdOs.Open(path); err != nil {
@@ -452,6 +478,34 @@ func loadInclude(root *Node, path string) (err error) {
 		}
 	}
 	return
+}
+
+func checkGlobPattern(path string) error {
+	if strings.HasPrefix(path, "*") {
+		return errors.New("path should be absolute")
+	}
+
+	var isGlob, hasSepLeft, hasSepRight bool
+
+	for _, p := range path {
+		switch p {
+		case '*':
+			isGlob = true
+		case filepath.Separator:
+			switch isGlob {
+			case true:
+				hasSepRight = true
+			case false:
+				hasSepLeft = true
+			}
+		}
+	}
+
+	if (isGlob && !hasSepLeft && hasSepRight) || (isGlob && !hasSepLeft && !hasSepRight) {
+		return errors.New("path should be absolute")
+	}
+
+	return nil
 }
 
 func parseConfig(root *Node, data []byte) (err error) {
@@ -483,11 +537,11 @@ func parseConfig(root *Node, data []byte) (err error) {
 		if key, value, err = parseLine(line); err != nil {
 			return fmt.Errorf("cannot parse configuration at line %d: %s", num, err.Error())
 		}
+
 		if string(key) == "Include" {
 			if root.level == 10 {
 				return fmt.Errorf("include depth exceeded limits")
 			}
-
 			if err = loadInclude(root, string(value)); err != nil {
 				return
 			}
@@ -496,6 +550,75 @@ func parseConfig(root *Node, data []byte) (err error) {
 		}
 	}
 	root.level--
+	return nil
+}
+
+func addObject(parent *Node, v interface{}) error {
+	if attr, ok := v.(map[string]interface{}); ok {
+		if _, ok := attr["Nodes"]; ok {
+			node := &Node{}
+			if err := setObjectNode(node, attr); err != nil {
+				return err
+			}
+			parent.Nodes = append(parent.Nodes, node)
+		} else {
+			value := &Value{}
+			if err := setObjectValue(value, attr); err != nil {
+				return err
+			}
+			parent.Nodes = append(parent.Nodes, value)
+		}
+	} else {
+		return fmt.Errorf("invalid object type %T", v)
+	}
+	return nil
+}
+
+func setObjectValue(value *Value, attr map[string]interface{}) error {
+	var line float64
+	var ok bool
+	if line, ok = attr["Line"].(float64); !ok {
+		return fmt.Errorf("invalid line attribute type %T", attr["Line"])
+	}
+	value.Line = int(line)
+
+	var err error
+	var data string
+	if data, ok = attr["Value"].(string); !ok {
+		return fmt.Errorf("invalid value type %T", attr["Value"])
+	}
+
+	if value.Value, err = base64.StdEncoding.DecodeString(data); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func setObjectNode(node *Node, attr map[string]interface{}) error {
+	var line float64
+	var ok bool
+
+	if line, ok = attr["Line"].(float64); !ok {
+		return fmt.Errorf("invalid line attribute type %T", attr["Line"])
+	}
+	node.Line = int(line)
+
+	if node.Name, ok = attr["Name"].(string); !ok {
+		return fmt.Errorf("invalid node name type %T", attr["Name"])
+	}
+
+	var nodes []interface{}
+	if nodes, ok = attr["Nodes"].([]interface{}); !ok {
+		return fmt.Errorf("invalid node children type %T", attr["u"])
+	}
+
+	for _, a := range nodes {
+		if err := addObject(node, a); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -542,8 +665,13 @@ func Unmarshal(data interface{}, v interface{}, args ...interface{}) (err error)
 	case *Node:
 		root = u
 		root.markUsed(false)
+	case map[string]interface{}: // JSON unmarshaling result
+		root = &Node{}
+		if err = setObjectNode(root, u); err != nil {
+			return fmt.Errorf("Cannot unmarshal JSON data: %s", err)
+		}
 	default:
-		return errors.New("Invalid input parameter")
+		return fmt.Errorf("Invalid input parameter of type %T", u)
 	}
 
 	if !strict {
@@ -570,7 +698,25 @@ func Load(filename string, v interface{}) (err error) {
 		return fmt.Errorf("cannot load configuration: %s", err.Error())
 	}
 
+	setCurrentConfigPath(filename)
+
 	return Unmarshal(buf.Bytes(), v)
+}
+
+func LoadUserParams(v interface{}) (err error) {
+	var file std.File
+
+	if file, err = stdOs.Open(currentConfigPath); err != nil {
+		return fmt.Errorf(`cannot open configuration file: %s`, err.Error())
+	}
+	defer file.Close()
+
+	buf := bytes.Buffer{}
+	if _, err = buf.ReadFrom(file); err != nil {
+		return fmt.Errorf("cannot load configuration: %s", err.Error())
+	}
+
+	return Unmarshal(buf.Bytes(), v, false)
 }
 
 var stdOs std.Os
