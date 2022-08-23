@@ -55,6 +55,7 @@ make
 ## install
 
 Copy `sheepskin.so` and `sheepskin-cgo.so` to a desired location, set up necessary permissions.
+Note that both have to be located in the same directory!
 
 ## configure
 
@@ -74,11 +75,7 @@ LoadModulePath=/path/to/modules/sheepskin.so
 Restart Zabbix agent / proxy / server.
 
 Note that you _don't need_ to mention `sheepskin-cgo.so` in Zabbix configuration file.
-It will be loaded in runtime using `dlopen("sheepskin-cgo.so", ...)`.
-
-Please make sure that
-[`dlopen()` can find](https://man7.org/linux/man-pages/man3/dlopen.3.html)
-`sheepskin-cgo.so` (e.g. by setting `LD_LIBRARY_PATH` appropriately).
+It will be loaded in runtime using [`dlopen()`](https://man7.org/linux/man-pages/man3/dlopen.3.html).
 
 ## use
 
