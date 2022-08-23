@@ -51,7 +51,7 @@ static int	sheep_web_certificate_get(AGENT_REQUEST *request, AGENT_RESULT *resul
 	static void	(*set_timeout)(int) = NULL;
 	static int	(*check_item)(AGENT_REQUEST *, AGENT_RESULT *) = NULL;
 
-	if (NULL == lib && NULL == (lib = dlopen("sheepskin-cgo.so", RTLD_NOW | RTLD_LOCAL | RTLD_DEEPBIND)))
+	if (NULL == lib && NULL == (lib = dlopen("$ORIGIN/sheepskin-cgo.so", RTLD_NOW | RTLD_LOCAL | RTLD_DEEPBIND)))
 	{
 		SET_MSG_RESULT(result, strdup(dlerror()));
 		return SYSINFO_RET_FAIL;
