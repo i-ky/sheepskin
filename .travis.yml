@@ -6,10 +6,10 @@ go:
 - "1.16"
 dist: focal
 env:
-- BRANCH=master
-- BRANCH=release/6.4
-- BRANCH=release/6.0
-- BRANCH=release/5.0
+- BRANCH=master IMAGE=trunk
+- BRANCH=release/6.4 IMAGE=6.4
+- BRANCH=release/6.0 IMAGE=6.0
+- BRANCH=release/5.0 IMAGE=5.0
 services:
 - docker
 before_install:
