@@ -1,4 +1,4 @@
-FROM gitpod/workspace-full
+FROM gitpod/workspace-full:2024-06-03-17-43-12
 
 USER gitpod
 
