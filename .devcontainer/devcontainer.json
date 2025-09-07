@@ -1,0 +1,25 @@
+{
+    "image": "mcr.microsoft.com/devcontainers/universal:4-linux",
+    "features": {
+        "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
+            "packages": "bear"
+        }
+    },
+    "containerEnv": {
+        "ZABBIX_SOURCE": "/workspaces/zabbix",
+        "LD_LIBRARY_PATH": "/workspaces/sheepskin"
+    },
+    "remoteEnv": {
+        "PATH": "/workspaces/sbin:/workspaces/bin:${containerEnv:PATH}"
+    },
+    "onCreateCommand": "git clone https://git.zabbix.com/scm/zbx/zabbix.git --depth 1 \"$ZABBIX_SOURCE\" && cd \"$ZABBIX_SOURCE\" && ./bootstrap.sh && ./configure --enable-agent --enable-agent2 --prefix=/workspaces && make install && echo 'LoadModule=/workspaces/sheepskin/sheepskin.so' >> /workspaces/etc/zabbix_agentd.conf && cd - && bear -- make",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "llvm-vs-code-extensions.vscode-clangd",
+                "ms-azuretools.vscode-docker",
+                "ms-python.python"
+            ]
+        }
+    }
+}
