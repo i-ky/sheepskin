@@ -60,9 +60,9 @@ Note that both have to be located in the same directory!
 ## configure
 
 Set `LoadModulePath` and `LoadModule` parameters in Zabbix
-[agent](https://www.zabbix.com/documentation/current/manual/appendix/config/zabbix_agentd) /
-[proxy](https://www.zabbix.com/documentation/current/manual/appendix/config/zabbix_proxy) /
-[server](https://www.zabbix.com/documentation/current/manual/appendix/config/zabbix_server)
+[agent](https://www.zabbix.com/documentation/current/en/manual/appendix/config/zabbix_agentd#loadmodule) /
+[proxy](https://www.zabbix.com/documentation/current/en/manual/appendix/config/zabbix_proxy#loadmodule) /
+[server](https://www.zabbix.com/documentation/current/en/manual/appendix/config/zabbix_server#loadmodule)
 configuration file.
 ```
 LoadModulePath=/path/to/modules/
@@ -88,5 +88,5 @@ if the module is loaded by server or proxy;
 if the module is loaded by agent.
 
 Please refer to
-[official documentation of `web.certificate.get`](https://www.zabbix.com/documentation/current/en/manual/config/items/itemtypes/zabbix_agent/zabbix_agent2#web-certificate)
+[official documentation of `web.certificate.get`](https://www.zabbix.com/documentation/current/en/manual/config/items/itemtypes/zabbix_agent/zabbix_agent2#web.certificate.get)
 for further details.
