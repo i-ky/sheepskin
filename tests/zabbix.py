@@ -1,4 +1,4 @@
-from subprocess import check_output
+from subprocess import run
 from os.path import abspath, dirname
 
 class agent:
@@ -14,7 +14,9 @@ def get(key, target):
         if target is agent2:
             return "agent2"
 
-    return check_output(
+    ret = run(
         ["docker-compose", "exec", "-T", service(), "zabbix_get", "-s", "localhost", "-k", key],
+        capture_output=True,
         cwd = dirname(abspath(__file__))
-    ).decode("utf8")
+    )
+    return ret.returncode, ret.stdout, ret.stderr
