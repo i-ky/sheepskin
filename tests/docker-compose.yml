@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   agent:
     image: zabbix/zabbix-agent:ubuntu-${IMAGE-trunk}
