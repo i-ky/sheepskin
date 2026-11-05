@@ -7,8 +7,8 @@ go:
 dist: focal
 env:
 - BRANCH=master
+- BRANCH=release/8.0 IMAGE=8.0-latest
 - BRANCH=release/7.4 IMAGE=7.4-latest
-- BRANCH=release/7.2 IMAGE=7.2-latest
 - BRANCH=release/7.0 IMAGE=7.0-latest
 - BRANCH=release/6.0 IMAGE=6.0-latest
 services:
